@@ -1,4 +1,4 @@
-### <div align="center">Train Booking</div>
+# <div align="center">Train Booking</div>
 
 <div align="center">
   <img src="https://i.imgur.com/1z7uAPe.png" />
