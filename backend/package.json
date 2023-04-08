@@ -3,6 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "description": "assignment by vaibhaw mishra",
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
