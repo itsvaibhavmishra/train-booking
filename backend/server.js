@@ -12,7 +12,11 @@ const app = express();
 app.use(express.json());
 
 // Using CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FrontendURL || 'https://localhost:5000',
+  })
+);
 
 // Connect to the MongoDB database
 mongoose
