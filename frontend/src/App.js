@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
 const App = () => {
+  const API_URI = process.env.REACT_APP_API_PROXY;
+
   const [trainData, setTrainData] = useState(null);
   const [numSeats, setNumSeats] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,16 +13,16 @@ const App = () => {
   useEffect(() => {
     // Fetch train data from the backend
     const fetchTrainData = async () => {
-      const { data } = await axios.get('/api/train');
+      const { data } = await axios.get(`${API_URI}/api/train`);
       setTrainData(data.train);
     };
     fetchTrainData();
-  }, []);
+  }, [API_URI]);
 
   const handleBookSeats = async () => {
     try {
       // Send booking request to backend
-      const { data } = await axios.post('/api/train', { numSeats });
+      const { data } = await axios.post(`${API_URI}/api/train`, { numSeats });
       toast.success(`Booked Seat No: ${data.seats.join(', ')}`, {
         position: 'top-right',
         theme: 'colored',
@@ -28,7 +30,7 @@ const App = () => {
       setNumSeats('');
 
       // Refresh train data from backend
-      const { data: newData } = await axios.get('/api/train');
+      const { data: newData } = await axios.get(`${API_URI}/api/train`);
       setTrainData(newData.train);
     } catch (err) {
       alert(err.response.data.message);

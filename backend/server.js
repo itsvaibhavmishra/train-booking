@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import router from './routes/train.js';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -9,6 +10,13 @@ const app = express();
 
 // Middleware to parse JSON body data
 app.use(express.json());
+
+// Using CORS
+app.use(
+  cors({
+    origin: process.env.FrontendURL || 'https://localhost:5000',
+  })
+);
 
 // Connect to the MongoDB database
 mongoose
