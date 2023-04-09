@@ -14,6 +14,8 @@ Train Booking is a MERN stack application that allows users to book seats for a 
 
 - Closest seats booking alogrithm
 
+- Seats data reset everyday at 6AM IST
+
 - Default seed for mongodb
 
 <br/>
