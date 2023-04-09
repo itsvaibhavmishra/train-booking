@@ -78,6 +78,7 @@ Creates an optimized production build
 
 ## Folder Structure
 
+```
 train-booking/
 ├── backend/
 │ ├── model/
@@ -98,6 +99,7 @@ train-booking/
 │ └── tailwind.config.js
 ├── .gitignore
 └── README.md
+```
 
 <br/>
 
