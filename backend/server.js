@@ -14,7 +14,7 @@ app.use(express.json());
 // Using CORS
 app.use(
   cors({
-    origin: process.env.API_URL || 'https://localhost:3000',
+    origin: [process.env.API_URL, 'http://localhost:3000'],
   })
 );
 
