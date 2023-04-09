@@ -1,7 +1,7 @@
 # <div align="center">Train Booking</div>
 
 <div align="center">
-  <img src="https://i.imgur.com/1z7uAPe.png" />
+  <img src="https://i.imgur.com/o1JbekD.png" />
 </div>
 
 Train Booking is a MERN stack application that allows users to book seats for a train. The app includes an attractive UI and multiple features.
