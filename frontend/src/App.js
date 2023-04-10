@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import SocialComp from './SocialComp';
 
 const App = () => {
+  const API_URI = process.env.REACT_APP_API_PROXY || 'http://localhost:5000';
+
   const [trainData, setTrainData] = useState(null);
   const [numSeats, setNumSeats] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,16 +14,16 @@ const App = () => {
   useEffect(() => {
     // Fetch train data from the backend
     const fetchTrainData = async () => {
-      const { data } = await axios.get('/api/train');
+      const { data } = await axios.get(`${API_URI}/api/train`);
       setTrainData(data.train);
     };
     fetchTrainData();
-  }, []);
+  }, [API_URI]);
 
   const handleBookSeats = async () => {
     try {
       // Send booking request to backend
-      const { data } = await axios.post('/api/train', { numSeats });
+      const { data } = await axios.post(`${API_URI}/api/train`, { numSeats });
       toast.success(`Booked Seat No: ${data.seats.join(', ')}`, {
         position: 'top-right',
         theme: 'colored',
@@ -28,7 +31,7 @@ const App = () => {
       setNumSeats('');
 
       // Refresh train data from backend
-      const { data: newData } = await axios.get('/api/train');
+      const { data: newData } = await axios.get(`${API_URI}/api/train`);
       setTrainData(newData.train);
     } catch (err) {
       alert(err.response.data.message);
@@ -105,12 +108,15 @@ const App = () => {
           value={numSeats}
           onChange={handleInputChange}
         />
-        <button
-          className="bg-[#eca74e] hover:bg-[#ee5e5f] duration-200 text-white font-bold py-2 px-4 rounded mt-5 mx-auto block"
-          onClick={handleBookSeats}
-        >
-          Book Seats
-        </button>
+        <div className="flex justify-between items-center">
+          <button
+            className="bg-[#eca74e] hover:bg-[#ee5e5f] duration-200 text-white font-bold py-2 px-4 rounded mt-5 mr-4 mx-auto block"
+            onClick={handleBookSeats}
+          >
+            Book Seats
+          </button>
+          <SocialComp />
+        </div>
       </div>
       <div className=" mx-auto w-1/2 md:ml-5 mt-5 md:mt-0">
         <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-5">
