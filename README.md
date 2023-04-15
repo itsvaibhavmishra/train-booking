@@ -8,9 +8,9 @@ Train Booking is a MERN stack application that allows users to book seats for a 
 
 ## Features
 
-- Seats avaibility check
+- Seats availability check
 
-- Book a max of 7 seates at once
+- Book a max of 7 seats at once
 
 - Closest seats booking alogrithm
 
