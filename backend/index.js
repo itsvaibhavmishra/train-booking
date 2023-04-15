@@ -33,8 +33,9 @@ mongoose
 // Route for handling train data and bookings
 app.use('/api/train', router);
 
-// Schedule task to run seed.js file every day at 6AM IST
-cron.schedule('0 6 * * *', () => {
+// Schedule task to run seed.js file every day at 9:30 AM IST
+cron.schedule('30 4 * * *', () => {
+  //30 4 represents 9:30 AM in IST
   console.log('Running seed.js file');
   const seed = spawn('node', ['seed.js']);
 
