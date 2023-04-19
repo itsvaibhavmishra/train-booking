@@ -4,17 +4,17 @@
   <img src="https://i.imgur.com/o1JbekD.png" />
 </div>
 
-Train Booking is a MERN stack application that allows users to book seats for a train. The app includes an attractive UI and multiple features.
+Train Booking is a MERN stack application that allows users to book seat for a train. The app includes an attractive UI and multiple features.
 
 ## Features
 
-- Seats availability check
+- Seat availability check
 
 - Book a max of 7 seats at once
 
 - Closest seats booking alogrithm
 
-- Seats data reset everyday at 9:30AM IST
+- Seat data reset everyday at 9:30AM IST
 
 - Default seed for mongodb
 
