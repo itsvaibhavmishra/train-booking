@@ -1,4 +1,4 @@
-name: Scheduled Seed Database
+name: Daily Seed Database
 
 on:
   schedule:
