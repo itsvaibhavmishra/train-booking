@@ -11,5 +11,11 @@
       "src": "/(.*)",
       "dest": "/"
     }
+  ],
+  "crons": [
+    {
+      "path": "/seed.js",
+      "schedule": "30 4 * * *"
+    }
   ]
 }
