@@ -1,0 +1,28 @@
+name: Scheduled Seed Database
+
+on:
+  schedule:
+    - cron: '30 0 * * *'  # This corresponds to 6:00 AM IST
+
+jobs:
+  seed-database:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'  # Node.js version
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        npm install
+
+    - name: Run seed.js
+      run: |
+        cd backend
+        node seed.js
