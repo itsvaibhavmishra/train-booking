@@ -2,7 +2,7 @@ name: Scheduled Seed Database
 
 on:
   schedule:
-    - cron: '30 4 * * *'  # This corresponds to 9:30 AM IST
+    - cron: '20 8 * * *'  # This corresponds to 9:30 AM IST
 
 jobs:
   seed-database:
