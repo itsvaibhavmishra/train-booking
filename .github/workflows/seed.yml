@@ -27,4 +27,4 @@ jobs:
         cd backend
         node seed.js
       env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}  # Using the secret
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}  # Using the mongodb secret
