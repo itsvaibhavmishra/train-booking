@@ -1,8 +1,9 @@
-name: Daily Seed Database
+name: Seed Database
 
 on:
-  schedule:
-    - cron: '30 0 * * *'  # This corresponds to 6:00 AM IST
+  push:
+    branches:
+      - master  # default branch name
 
 jobs:
   seed-database:
