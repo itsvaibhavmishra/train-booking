@@ -1,9 +1,8 @@
 name: Scheduled Seed Database
 
 on:
-  push:
-    branches:
-      - master  # default branch name
+  schedule:
+    - cron: '30 4 * * *'  # This corresponds to 9:30 AM IST
 
 jobs:
   seed-database:
@@ -16,7 +15,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'  # Node.js version (adjust as needed)
+        node-version: '18'  # Node.js version
 
     - name: Install dependencies
       run: |
