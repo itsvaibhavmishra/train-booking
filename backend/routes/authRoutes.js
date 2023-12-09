@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import Users from "../model/user.js";
+import { isDisposableEmail } from "../utils/checkDispose.js";
 
 const authRouter = express.Router();
 
@@ -8,6 +9,16 @@ const authRouter = express.Router();
 authRouter.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
+
+    // Check if email is disposable
+    const isDisposable = await isDisposableEmail(email);
+
+    if (isDisposable) {
+      return res.json({
+        status: 400,
+        message: "Disposable emails are not allowed.",
+      });
+    }
 
     // Check if user with the same email already exists
     const existingUser = await Users.findOne({ email });
