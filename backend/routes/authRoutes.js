@@ -64,6 +64,7 @@ authRouter.post("/login", async (req, res) => {
     }
 
     const userData = {
+      id: user._id,
       fullName: user.fullName,
       email: user.email,
     };

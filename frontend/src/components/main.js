@@ -20,12 +20,30 @@ const Main = () => {
 
   const handleBookSeats = async () => {
     try {
+      const userData = JSON.parse(localStorage.getItem("user")) || { id: null };
+
       // Send booking request to backend
-      const { data } = await axios.post("/api/train", { numSeats });
-      toast.success(`Booked Seat No: ${data.seats.join(", ")}`, {
-        position: "top-right",
-        theme: "colored",
-      });
+      const { data } = await axios.post(
+        "/api/train",
+        { numSeats },
+        {
+          headers: {
+            "user-id": userData.id,
+          },
+        }
+      );
+      // Handle different status codes
+      switch (data.status) {
+        case 200:
+          toast.success(`Booked Seat No: ${data.seats.join(", ")}`, {
+            position: "top-right",
+            theme: "colored",
+          });
+          break;
+        default:
+          toast.error(data.message);
+      }
+
       setNumSeats("");
 
       // Refresh train data from backend

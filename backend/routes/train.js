@@ -1,5 +1,6 @@
 import express from "express";
 import Train from "../model/train.js";
+import Users from "../model/user.js";
 
 const trainRouter = express.Router();
 
@@ -13,30 +14,44 @@ trainRouter.get("/", async (req, res) => {
       .populate("bookings", "-_id -__v");
 
     if (!train) {
-      return res.status(404).json({ message: "Train not found" });
+      return res.json({ status: 404, message: "Train not found" });
     }
 
     // Map the seats data to a simpler array of boolean values indicating whether the seat is booked or not
     const seats = train.coach.seats.map((seat) => seat.isBooked);
 
     // Send the train data along with the simplified seats data to the client
-    res.json({ train, seats });
+    res.json({ status: 200, train, seats });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.json({ status: 500, message: "Server error" });
   }
 });
 
 // Route for allowing any user to book seats
 trainRouter.post("/", async (req, res) => {
   try {
+    // Extract user ID from request headers
+    const userId = req.headers["user-id"];
+
+    // Check if the user exists based on the extracted ID
+    if (userId !== null || userId !== undefined) {
+      const user = await Users.findById(userId);
+      if (!user) {
+        return res.json({ status: 404, message: "Please login first" });
+      }
+    } else {
+      return res.json({ status: 404, message: "Please login first" });
+    }
+
     // Parse the requested number of seats from the client
     const numSeats = parseInt(req.body.numSeats);
 
     if (!numSeats || numSeats < 1 || numSeats > 7) {
-      return res
-        .status(400)
-        .json({ message: "Invalid number of seats requested" });
+      return res.json({
+        status: 400,
+        message: "Invalid number of seats requested",
+      });
     }
 
     // Find the train with its coach and bookings data
@@ -45,14 +60,14 @@ trainRouter.post("/", async (req, res) => {
       .populate("bookings");
 
     if (!train) {
-      return res.status(404).json({ message: "Train not found" });
+      return res.json({ status: 404, message: "Train not found" });
     }
 
     // Find the available seats for the requested number of seats
     let availableSeats = findAvailableSeats(train.coach.seats, numSeats);
 
     if (!availableSeats) {
-      return res.status(400).json({ message: "No seats available" });
+      return res.json({ status: 400, message: "No seats available" });
     }
 
     // Mark the available seats as booked
@@ -68,10 +83,10 @@ trainRouter.post("/", async (req, res) => {
     await newBooking.save();
 
     // Send the booked seat numbers to the client
-    res.json({ seats: availableSeats });
+    res.json({ status: 200, seats: availableSeats });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.json({ status: 500, message: "Server error" });
   }
 });
 
