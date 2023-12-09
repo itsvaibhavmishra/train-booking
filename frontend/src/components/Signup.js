@@ -27,33 +27,38 @@ const Signup = () => {
     }));
   };
 
+  const toastFunctions = {
+    success: toast.success,
+    error: toast.error,
+    info: toast.info,
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const { data } = await axios.post("/api/auth/signup", formData);
+    await axios
+      .post("/api/auth/signup", formData)
+      .then(function (response) {
+        const data = response.data;
 
-      // Handle different status codes
-      switch (data.status) {
-        case 201:
-          toast.success(data.message);
-          navigate("/login");
-          break;
-        default:
-          toast.error(data.message);
-      }
-      // Reset form fields
-      setFormData({
-        fullName: "",
-        email: "",
-        password: "",
+        const selectedToast = toastFunctions[data.status] || toast;
+        selectedToast(data.message);
+
+        // Reset form fields
+        setFormData({
+          fullName: "",
+          email: "",
+          password: "",
+        });
+        setPasswordVisible(false);
+
+        navigate("/login");
+      })
+      .catch(function (error) {
+        console.error("Signup failed:", error.message);
+        const selectedToast = toastFunctions[error.status] || toast;
+        selectedToast(error.message);
       });
-      setPasswordVisible(false);
-    } catch (error) {
-      // Handle login failure (you can show an error message)
-      console.error("Login failed:", error.response.data.message);
-      toast.error("Login failed. Check your credentials.");
-    }
   };
 
   return (
@@ -191,7 +196,7 @@ const Signup = () => {
                   aria-hidden="true"
                 />
               </span>
-              Sign in
+              Sign Up
             </button>
           </div>
         </form>

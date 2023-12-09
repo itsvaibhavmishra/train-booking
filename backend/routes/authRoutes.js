@@ -12,8 +12,8 @@ authRouter.post("/signup", async (req, res) => {
 
     // Full name validation
     if (fullName.length < 3 || fullName.length > 26) {
-      return res.json({
-        status: 400,
+      return res.status(400).json({
+        status: "info",
         message: "Length for full name should be between 3-26",
       });
     }
@@ -21,8 +21,8 @@ authRouter.post("/signup", async (req, res) => {
     // Email Validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return res.json({
-        status: 400,
+      return res.status(400).json({
+        status: "info",
         message: "Invalid email format",
       });
     }
@@ -31,8 +31,8 @@ authRouter.post("/signup", async (req, res) => {
     const passwordRegex =
       /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
     if (!passwordRegex.test(password)) {
-      return res.json({
-        status: 400,
+      return res.status(400).json({
+        status: "info",
         message:
           "Password must be between 8-10 characters, including at least one uppercase, lowercase, number, and special character",
       });
@@ -42,8 +42,8 @@ authRouter.post("/signup", async (req, res) => {
     const isDisposable = await isDisposableEmail(email);
 
     if (isDisposable) {
-      return res.json({
-        status: 400,
+      return res.status(400).json({
+        status: "info",
         message: "Disposable emails are not allowed.",
       });
     }
@@ -51,7 +51,9 @@ authRouter.post("/signup", async (req, res) => {
     // Check if user with the same email already exists
     const existingUser = await Users.findOne({ email });
     if (existingUser) {
-      return res.json({ status: 400, message: "Email is already registered" });
+      return res
+        .status(400)
+        .json({ status: "info", message: "Email is already registered" });
     }
 
     // Hash the password
@@ -67,10 +69,12 @@ authRouter.post("/signup", async (req, res) => {
     // Save the user to the database
     await newUser.save();
 
-    res.json({ status: 201, message: "User registered successfully" });
+    res
+      .status(201)
+      .json({ status: "success", message: "User registered successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ status: 500, message: "Internal Server Error" });
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
 
@@ -82,13 +86,17 @@ authRouter.post("/login", async (req, res) => {
     // Find the user by email
     const user = await Users.findOne({ email });
     if (!user) {
-      return res.json({ status: 404, message: "User not found" });
+      return res
+        .status(404)
+        .json({ status: "error", message: "User not found" });
     }
 
     // Compare the provided password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.json({ status: 401, message: "Invalid email or password" });
+      return res
+        .status(401)
+        .json({ status: "error", message: "Invalid email or password" });
     }
 
     const userData = {
@@ -97,10 +105,12 @@ authRouter.post("/login", async (req, res) => {
       email: user.email,
     };
 
-    res.json({ status: 200, message: "Login successful", user: userData });
+    res
+      .status(200)
+      .json({ status: "success", message: "Login successful", user: userData });
   } catch (error) {
     console.error(error);
-    res.json({ status: 500, message: "Internal Server Error" });
+    res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
 });
 

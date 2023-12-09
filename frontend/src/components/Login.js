@@ -26,33 +26,37 @@ const Login = () => {
     }));
   };
 
+  const toastFunctions = {
+    success: toast.success,
+    error: toast.error,
+    info: toast.info,
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    try {
-      const { data } = await axios.post("/api/auth/login", formData);
+    await axios
+      .post("/api/auth/login", formData)
+      .then(function (response) {
+        const data = response.data;
 
-      // Handle different status codes
-      switch (data.status) {
-        case 200:
-          toast.success(data.message);
-          localStorage.setItem("user", JSON.stringify(data.user));
-          navigate("/");
-          break;
-        default:
-          toast.error(data.message);
-      }
-      // Reset form fields
-      setFormData({
-        email: "",
-        password: "",
+        const selectedToast = toastFunctions[data.status] || toast;
+        selectedToast(data.message);
+        // Reset form fields
+        setFormData({
+          email: "",
+          password: "",
+        });
+        setPasswordVisible(false);
+
+        localStorage.setItem("user", JSON.stringify(data.user));
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log("Login failed: ", error.message);
+        const selectedToast = toastFunctions[error.status] || toast;
+        selectedToast(error.message);
       });
-      setPasswordVisible(false);
-    } catch (error) {
-      // Handle login failure (you can show an error message)
-      console.error("Login failed:", error.response.data.message);
-      toast.error("Login failed. Check your credentials.");
-    }
   };
 
   return (

@@ -9,21 +9,37 @@ const Main = () => {
   const [numSeats, setNumSeats] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const toastFunctions = {
+    success: toast.success,
+    error: toast.error,
+    info: toast.info,
+  };
+
   useEffect(() => {
     // Fetch train data from the backend
     const fetchTrainData = async () => {
-      const { data } = await axios.get("/api/train");
-      setTrainData(data.train);
+      await axios
+        .get("/api/train")
+        .then(function (response) {
+          const data = response.data;
+          setTrainData(data.train);
+        })
+        .catch(function (error) {
+          console.log("Fetch Train Data failed: ", error.message);
+          const selectedToast = toastFunctions[error.status] || toast;
+          selectedToast(error.message);
+        });
     };
     fetchTrainData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleBookSeats = async () => {
-    try {
-      const userData = JSON.parse(localStorage.getItem("user")) || { id: null };
+    const userData = JSON.parse(localStorage.getItem("user")) || { id: null };
 
-      // Send booking request to backend
-      const { data } = await axios.post(
+    // Send booking request to backend
+    await axios
+      .post(
         "/api/train",
         { numSeats },
         {
@@ -31,27 +47,26 @@ const Main = () => {
             "user-id": userData.id,
           },
         }
-      );
-      // Handle different status codes
-      switch (data.status) {
-        case 200:
-          toast.success(`Booked Seat No: ${data.seats.join(", ")}`, {
-            position: "top-right",
-            theme: "colored",
-          });
-          break;
-        default:
-          toast.error(data.message);
-      }
+      )
+      .then(async function (response) {
+        const data = response.data;
 
-      setNumSeats("");
+        toast.success(`Booked Seat No: ${data.seats.join(", ")}`, {
+          position: "top-right",
+          theme: "colored",
+        });
 
-      // Refresh train data from backend
-      const { data: newData } = await axios.get("/api/train");
-      setTrainData(newData.train);
-    } catch (err) {
-      alert(err.response.data.message);
-    }
+        setNumSeats("");
+
+        // Refresh train data from backend
+        const { data: newData } = await axios.get("/api/train");
+        setTrainData(newData.train);
+      })
+      .catch(function (error) {
+        console.log("Booking seates failed: ", error.message);
+        const selectedToast = toastFunctions[error.status] || toast;
+        selectedToast(error.message);
+      });
   };
 
   const handleInputChange = (event) => {
