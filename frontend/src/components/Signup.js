@@ -1,12 +1,59 @@
 import { useState } from "react";
 import { UserPlus, Eye, EyeSlash } from "phosphor-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const Signup = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.post("/api/auth/signup", formData);
+
+      // Handle different status codes
+      switch (data.status) {
+        case 201:
+          toast.success(data.message);
+          navigate("/login");
+          break;
+        default:
+          toast.error(data.message);
+      }
+      // Reset form fields
+      setFormData({
+        fullName: "",
+        email: "",
+        password: "",
+      });
+      setPasswordVisible(false);
+    } catch (error) {
+      // Handle login failure (you can show an error message)
+      console.error("Login failed:", error.response.data.message);
+      toast.error("Login failed. Check your credentials.");
+    }
   };
 
   return (
@@ -14,13 +61,11 @@ const Signup = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="flex justify-center">
-            <Link to="/">
-              <img
-                className="h-32"
-                src="https://i.imgur.com/ilDN4RY.png"
-                alt="Workflow"
-              />
-            </Link>
+            <img
+              className="h-32"
+              src="https://i.imgur.com/ilDN4RY.png"
+              alt="Workflow"
+            />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create a new account
@@ -35,7 +80,12 @@ const Signup = () => {
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form
+          className="mt-8 space-y-6"
+          action="#"
+          method="POST"
+          onSubmit={handleLogin}
+        >
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -44,8 +94,10 @@ const Signup = () => {
               </label>
               <input
                 id="name"
-                name="name"
+                name="fullName"
                 type="text"
+                value={formData.fullName}
+                onChange={handleChange}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Full Name"
                 required
@@ -59,6 +111,8 @@ const Signup = () => {
                 id="email-address"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleChange}
                 autoComplete="email"
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
@@ -74,6 +128,8 @@ const Signup = () => {
                   id="password"
                   name="password"
                   type={passwordVisible ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
                   autoComplete="current-password"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

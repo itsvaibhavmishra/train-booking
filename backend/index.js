@@ -1,10 +1,12 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import trainRouter from "./routes/train.js";
 import cors from "cors";
 import cron from "node-cron";
 import { spawn } from "child_process";
+
+import trainRouter from "./routes/train.js";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -32,6 +34,14 @@ mongoose
 
 // Route for handling train data and bookings
 app.use("/api/train", trainRouter);
+
+// Route for Authentication
+app.use("/api/auth", authRouter);
+
+// Handle 404 or other routes
+app.use("*", (req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
 
 // Schedule task to run seed.js file every day at 9:30 AM IST
 cron.schedule("30 4 * * *", () => {
