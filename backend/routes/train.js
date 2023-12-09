@@ -1,19 +1,19 @@
-import express from 'express';
-import Train from '../model/train.js';
+import express from "express";
+import Train from "../model/train.js";
 
-const router = express.Router();
+const trainRouter = express.Router();
 
 // Route for getting the train data
-router.get('/', async (req, res) => {
+trainRouter.get("/", async (req, res) => {
   try {
     // Find the train with its coach and bookings data
     const train = await Train.findOne()
-      .select('-__v')
-      .populate('coach.seats', '-_id -__v')
-      .populate('bookings', '-_id -__v');
+      .select("-__v")
+      .populate("coach.seats", "-_id -__v")
+      .populate("bookings", "-_id -__v");
 
     if (!train) {
-      return res.status(404).json({ message: 'Train not found' });
+      return res.status(404).json({ message: "Train not found" });
     }
 
     // Map the seats data to a simpler array of boolean values indicating whether the seat is booked or not
@@ -23,12 +23,12 @@ router.get('/', async (req, res) => {
     res.json({ train, seats });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
 // Route for allowing any user to book seats
-router.post('/', async (req, res) => {
+trainRouter.post("/", async (req, res) => {
   try {
     // Parse the requested number of seats from the client
     const numSeats = parseInt(req.body.numSeats);
@@ -36,23 +36,23 @@ router.post('/', async (req, res) => {
     if (!numSeats || numSeats < 1 || numSeats > 7) {
       return res
         .status(400)
-        .json({ message: 'Invalid number of seats requested' });
+        .json({ message: "Invalid number of seats requested" });
     }
 
     // Find the train with its coach and bookings data
     const train = await Train.findOne()
-      .populate('coach.seats')
-      .populate('bookings');
+      .populate("coach.seats")
+      .populate("bookings");
 
     if (!train) {
-      return res.status(404).json({ message: 'Train not found' });
+      return res.status(404).json({ message: "Train not found" });
     }
 
     // Find the available seats for the requested number of seats
     let availableSeats = findAvailableSeats(train.coach.seats, numSeats);
 
     if (!availableSeats) {
-      return res.status(400).json({ message: 'No seats available' });
+      return res.status(400).json({ message: "No seats available" });
     }
 
     // Mark the available seats as booked
@@ -71,7 +71,7 @@ router.post('/', async (req, res) => {
     res.json({ seats: availableSeats });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 });
 
@@ -83,7 +83,7 @@ function markSeatsAsBooked(train, bookedSeats) {
       seats[i].isBooked = true;
     }
   }
-  train.markModified('coach.seats');
+  train.markModified("coach.seats");
   return train.save();
 }
 
@@ -117,4 +117,4 @@ function findAvailableSeats(seats, numSeats) {
   return null;
 }
 
-export default router;
+export default trainRouter;
