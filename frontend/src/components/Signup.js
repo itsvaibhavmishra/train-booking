@@ -98,6 +98,8 @@ const Signup = () => {
                 type="text"
                 value={formData.fullName}
                 onChange={handleChange}
+                pattern=".{3,26}"
+                title="Full name must be between 3 and 26 characters"
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Full Name"
                 required
@@ -130,6 +132,8 @@ const Signup = () => {
                   type={passwordVisible ? "text" : "password"}
                   value={formData.password}
                   onChange={handleChange}
+                  pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$"
+                  title="Password must be between 8-10 characters, including at least one uppercase letter, one lowercase letter, one number, and one special character."
                   autoComplete="current-password"
                   required
                   className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"

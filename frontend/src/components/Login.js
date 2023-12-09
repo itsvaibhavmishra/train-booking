@@ -32,7 +32,6 @@ const Login = () => {
     try {
       const { data } = await axios.post("/api/auth/login", formData);
 
-      console.log(data);
       // Handle different status codes
       switch (data.status) {
         case 200:
