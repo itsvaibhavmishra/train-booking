@@ -5,6 +5,13 @@ import cors from "cors";
 import cron from "node-cron";
 import { spawn } from "child_process";
 
+// security packages
+import helmet from "helmet";
+import { xss } from "express-xss-sanitizer";
+import bodyParser from "body-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import cookieParser from "cookie-parser";
+
 import trainRouter from "./routes/train.js";
 import authRouter from "./routes/authRoutes.js";
 
@@ -21,6 +28,16 @@ app.use(
     origin: [process.env.API_URL, "http://localhost:3000"],
   })
 );
+
+// parsing data to json
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// security middlewares
+app.use(helmet()); // general security
+app.use(xss()); // xss protection
+app.use(mongoSanitize()); // sanitization for mongodb
+app.use(cookieParser()); // parsing cookies
 
 // Connect to the MongoDB database
 mongoose
