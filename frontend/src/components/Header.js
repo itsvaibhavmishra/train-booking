@@ -14,7 +14,7 @@ const Header = () => {
 
     return (
       // Header when logged in
-      <div className="flex justify-between md:justify-end space-x-2 mx-4 mt-1 md:-mb-8">
+      <div className="flex justify-between md:justify-end space-x-2 mx-4 mt-1 md:-mb-2">
         <span className="text-[#000] hover:text-[#149ddd] hover:bg-transparent px-4 py-2 border hover:border-[#ee5e5f] rounded-full transition duration-300 focus:outline-none focus:ring bg-[#eca74e] focus:border-blue-300 cursor-default max-w-[8rem] truncate">
           {firstName}
         </span>
