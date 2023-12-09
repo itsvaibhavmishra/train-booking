@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { toast } from "react-toastify";
 import SocialComp from "../SocialComp";
-import { Link } from "react-router-dom";
+import Header from "./Header";
 
 const Main = () => {
   const [trainData, setTrainData] = useState(null);
@@ -57,22 +57,7 @@ const Main = () => {
 
   return (
     <>
-      {/* Header Buttons */}
-      <div className="flex justify-between md:justify-end space-x-2 mx-4 mt-1 -mb-8">
-        <Link
-          to="/login"
-          className="text-[#000] hover:text-[#149ddd] hover:bg-transparent px-4 py-2 border hover:border-[#ee5e5f] rounded-full transition duration-300 focus:outline-none focus:ring bg-[#eca74e] focus:border-blue-300"
-        >
-          Log In
-        </Link>
-        <Link
-          to="/signup"
-          className="text-[#000] hover:text-[#149ddd] hover:bg-transparent px-4 py-2 border hover:border-[#eca74e] rounded-full transition duration-300 focus:outline-none focus:ring bg-[#ee5e5f] focus:border-blue-300"
-        >
-          Sign Up
-        </Link>
-      </div>
-
+      <Header />
       <div className="container mx-auto mt-5 flex flex-col md:flex-row items-center">
         <div className="max-w-md mx-auto md:max-w-2xl text-center">
           <h2 className="text-2xl text-[#ee5e5f] font-bold mb-14 pb-2 border-b border-[#eca74e4f] flex flex-col md:flex-row md:items-center md:justify-center">
