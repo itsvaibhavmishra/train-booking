@@ -10,6 +10,34 @@ authRouter.post("/signup", async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
 
+    // Full name validation
+    if (fullName.length < 3 || fullName.length > 26) {
+      return res.json({
+        status: 400,
+        message: "Length for full name should be between 3-26",
+      });
+    }
+
+    // Email Validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.json({
+        status: 400,
+        message: "Invalid email format",
+      });
+    }
+
+    // Password Validation
+    const passwordRegex =
+      /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,10}$/;
+    if (!passwordRegex.test(password)) {
+      return res.json({
+        status: 400,
+        message:
+          "Password must be between 8-10 characters, including at least one uppercase, lowercase, number, and special character",
+      });
+    }
+
     // Check if email is disposable
     const isDisposable = await isDisposableEmail(email);
 
